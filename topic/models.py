@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 # 討論主題
-class Topic(models.Model):
+class Topic(models.Model):#要有幾個(那些)欄位
     subject = models.CharField('討論主題', max_length=255)
     content = models.TextField('內文')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
