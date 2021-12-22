@@ -20,5 +20,6 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('topic/',include('topic.urls')),
-    path('',RedirectView.as_view(url='topic/'))#一開始自動導引到路徑topic
+    path('',RedirectView.as_view(url='topic/')),#一開始自動導引到路徑topic
+    path('user/', include('django.contrib.auth.urls')),#使用現成APP
 ]

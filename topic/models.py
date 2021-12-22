@@ -12,3 +12,17 @@ class Topic(models.Model):#要有幾個(那些)欄位
 
     def __str__(self):
         return "{}: {}".format(self.author, self.subject)
+
+# 討論主題內的回覆
+class Reply(models.Model):
+    topic = models.ForeignKey(Topic, models.CASCADE)
+    content = models.TextField('回覆內容')
+    author = models.ForeignKey(User, models.CASCADE)
+    created = models.DateTimeField('回覆時間', auto_now_add=True)
+
+    def __str__(self):
+        return "{} | {}: {}".format(
+            self.topic, 
+            self.author, 
+            self.content
+        )
