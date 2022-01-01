@@ -33,20 +33,7 @@ class TopicView(DetailView):
         ctx['reply_list'] = Reply.objects.filter(topic=self.object)
         return ctx
 
-# 檢視討論主題
-class TopicView(DetailView):
-    model = Topic
-    def get_object(self):
-        topic = super().get_object()    # 取得欲查看的討論主題
-        topic.hits += 1     # 等同 topic.hits = topic.hits + 1
-        topic.save()
-        return topic    
 
-    def get_object(self):
-        topic = super().get_object()    # 取得欲查看的討論主題
-        topic.hits += 1     # 等同 topic.hits = topic.hits + 1
-        topic.save()
-        return topic
 # 回覆討論主題
 class TopicReply(LoginRequiredMixin,CreateView):
     model = Reply
@@ -54,7 +41,7 @@ class TopicReply(LoginRequiredMixin,CreateView):
     template_name = 'topic/topic_form.html'#直接指定要用哪個檔
 
     def form_valid(self, form):
-        topic = Topic.objects.get(id=self.kwargs['tid'])
+        topic = Topic.objects.get(id=self.kwargs['pk'])
         form.instance.topic = topic
         #form.instance.topic_id = self.kwargs['tid'](前兩行可以省略成這行)
         form.instance.author = self.request.user
@@ -63,7 +50,7 @@ class TopicReply(LoginRequiredMixin,CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('topic_view', args=[self.kwargs['tid']])#告訴她變動的部分
+        return reverse('topic_view', args=[self.kwargs['pk']])#告訴她變動的部分
 
 # 刪除討論主題
 class TopicDelete(PermissionRequiredMixin, DeleteView):
@@ -73,3 +60,13 @@ class TopicDelete(PermissionRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('topic_list')
+
+# 刪除討論回覆
+class ReplyDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = 'topic.delete_reply'
+    model = Reply
+    template_name = 'confirm_delete.html'
+
+    def get_success_url(self):
+        reply = self.get_object()   # 取得欲刪除的那筆紀錄
+        return reverse('topic_view', args=[reply.topic.id])

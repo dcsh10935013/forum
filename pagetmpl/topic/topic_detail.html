@@ -23,7 +23,7 @@
 </div>
 <hr/>
 <ul class="list-group">
-  {% for reply in topic.reply_set.all %}
+  {% for reply in reply_list %}
   <li class="list-group-item d-md-flex justify-content-between">
     <div class="ml-2">{{ reply.content|linebreaks }}</div>
     <small class="text-muted">
